@@ -336,7 +336,7 @@ pub struct Mention {
     /// 也可以用作租户在应用里面的唯一标识
     pub tenant_key: String,
     /// 合并转发消息中，上一层级的消息id message_id
-    pub upper_message_id: String,
+    pub upper_message_id: Option<String>,
 }
 
 #[derive(Default, Clone)]
