@@ -61,7 +61,7 @@ pub struct UserId {
     /// 用户的 union id
     pub union_id: String,
     /// 用户的 user id
-    pub user_id: String,
+    pub user_id: Option<String>,
     /// 用户的 open id
     pub open_id: String,
 }
