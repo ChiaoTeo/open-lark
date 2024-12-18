@@ -524,7 +524,7 @@ impl SendMessageTrait for MessagePost {
     }
 
     fn content(&self) -> String {
-        json!(self).to_string()
+        json!(self.post).to_string()
     }
 }
 
