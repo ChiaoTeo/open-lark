@@ -164,7 +164,7 @@ pub enum FeishuCardWidthMode {
     Fill,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize,Default)]
 pub struct FeishuCardStyle {
     /// 分别为移动端和桌面端添加自定义字号。用于在普通文本组件和富文本组件 JSON
     /// 中设置字号属性。支持添加多个自定义字号对象。
@@ -174,6 +174,18 @@ pub struct FeishuCardStyle {
     /// 中设置颜色属性。支持添加多个自定义颜色对象。
     #[serde(skip_serializing_if = "Option::is_none")]
     color: Option<HashMap<String, String>>,
+}
+
+impl FeishuCardStyle{
+     pub fn color(mut self, color:HashMap<String, String>) -> Self {
+        self.color = Some(color);
+        self
+    }
+
+     pub fn text_size(mut self, text_size:HashMap<String, CustomTextSize>) -> Self {
+        self.text_size = Some(text_size);
+        self
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, Eq, PartialEq, Hash, Clone, Copy)]
