@@ -291,13 +291,13 @@ impl ApiResponseTrait for Message {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Sender {
     /// 该字段标识发送者的id
-    id: String,
+    pub id: String,
     /// 该字段标识发送者的id类型
     ///
     /// 可选值有：
     /// - open_id
     /// - app_id
-    id_type: String,
+    pub id_type: String,
     /// 该字段标识发送者的类型
     ///
     /// 可选值有：
@@ -305,10 +305,10 @@ pub struct Sender {
     /// - app: 应用
     /// - anonymous: 匿名
     /// - unknown: 未知
-    sender_type: String,
+    pub sender_type: String,
     /// 为租户在飞书上的唯一标识，用来换取对应的tenant_access_token，
     /// 也可以用作租户在应用里面的唯一标识
-    tenant_key: String,
+    pub tenant_key: String,
 }
 
 /// 消息内容
