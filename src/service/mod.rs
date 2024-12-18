@@ -1,5 +1,6 @@
 pub mod authentication;
 pub mod bitable;
+pub mod card;
 pub mod drive;
 pub mod im;
 pub mod search;

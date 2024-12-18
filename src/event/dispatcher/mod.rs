@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::service::card::p2_card_action_trigger_v1::P2CardActionTriggerV1;
+use crate::service::card::p2_card_action_trigger_v1::P2CardActionTriggerV1ProcessorImpl;
 use crate::{
     event::context::EventContext,
     service::im::v1::{
@@ -109,6 +111,19 @@ impl EventDispatcherHandlerBuilder {
             panic!("processor already registered, type: {}", key);
         }
         let processor = P2ImMessageReadV1ProcessorImpl::new(f);
+        self.processor_map.insert(key, Box::new(processor));
+        self
+    }
+
+    pub fn register_p2_card_action_trigger_v1<F>(mut self, f: F) -> Self
+    where
+        F: Fn(P2CardActionTriggerV1) + 'static + Sync + Send,
+    {
+        let key = "p2.card.action.trigger".to_string();
+        if self.processor_map.contains_key(&key) {
+            panic!("processor already registered, type: {}", key);
+        }
+        let processor = P2CardActionTriggerV1ProcessorImpl::new(f);
         self.processor_map.insert(key, Box::new(processor));
         self
     }
