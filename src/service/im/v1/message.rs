@@ -39,6 +39,26 @@ impl MessageService {
         Ok(api_resp)
     }
 
+    /// 更新消息
+    ///
+    /// 给指定用户或者会话发送消息，支持文本、富文本、可交互的消息卡片、群名片、个人名片、图片、
+    /// 视频、音频、文件、表情包。
+    pub async fn update(
+        &self,
+        msg_id: &str,
+        create_message_request: UpdateMessageRequest,
+        option: Option<RequestOption>,
+    ) -> SDKResult<BaseResponse<Message>> {
+        let mut api_req = create_message_request.api_req;
+        api_req.http_method = Method::PATCH;
+        api_req.api_path = format!("/open-apis/im/v1/messages/{}", msg_id);
+        api_req.supported_access_token_types = vec![AccessTokenType::Tenant, AccessTokenType::User];
+
+        let api_resp = Transport::request(api_req, &self.config, option).await?;
+
+        Ok(api_resp)
+    }
+
     /// 获取会话历史消息
     ///
     /// 获取会话（包括单聊、群组）的历史消息（聊天记录）
@@ -113,6 +133,140 @@ impl<'a> ListMessageIterator<'a> {
             }
         }
     }
+}
+
+#[derive(Default)]
+pub struct UpdateMessageRequest {
+    api_req: ApiRequest,
+}
+
+impl UpdateMessageRequest {
+    pub fn builder() -> UpdateMessageRequestBuilder {
+        UpdateMessageRequestBuilder::default()
+    }
+}
+
+#[derive(Default)]
+pub struct UpdateMessageRequestBuilder {
+    request: UpdateMessageRequest,
+}
+
+impl UpdateMessageRequestBuilder {
+    pub fn receive_id_type(mut self, receive_id_type: impl ToString) -> Self {
+        self.request
+            .api_req
+            .query_params
+            .insert("receive_id_type".to_string(), receive_id_type.to_string());
+        self
+    }
+
+    pub fn request_body(mut self, body: UpdateMessageRequestBody) -> Self {
+        self.request.api_req.body = serde_json::to_vec(&body).unwrap();
+        self
+    }
+
+    pub fn build(self) -> UpdateMessageRequest {
+        self.request
+    }
+}
+
+/// 发送消息 请求体
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct UpdateMessageRequestBody {
+    /// 消息接收者的ID，ID类型应与查询参数receive_id_type 对应；
+    /// 推荐使用 OpenID，获取方式可参考文档如何获取 Open ID？
+    ///
+    /// 示例值："ou_7d8a6e6df7621556ce0d21922b676706ccs"
+    receive_id: String,
+    /// 消息类型 包括：text、post、image、file、audio、media、sticker、interactive、share_chat、
+    /// share_user等，类型定义请参考发送消息内容
+    ///
+    /// 示例值："text"
+    msg_type: String,
+    /// 消息内容，JSON结构序列化后的字符串。不同msg_type对应不同内容，具体格式说明参考：
+    /// 发送消息内容
+    ///
+    /// 注意：
+    /// JSON字符串需进行转义，如换行符转义后为\\n
+    /// 文本消息请求体最大不能超过150KB
+    /// 卡片及富文本消息请求体最大不能超过30KB
+    /// 示例值："{\"text\":\"test content\"}"
+    content: String,
+    /// 由开发者生成的唯一字符串序列，用于发送消息请求去重；
+    /// 持有相同uuid的请求1小时内至多成功发送一条消息
+    ///
+    /// 示例值："选填，每次调用前请更换，如a0d69e20-1dd1-458b-k525-dfeca4015204"
+    ///
+    /// 数据校验规则：
+    ///
+    /// 最大长度：50 字符
+    uuid: Option<String>,
+}
+
+impl UpdateMessageRequestBody {
+    pub fn builder() -> UpdateMessageRequestBodyBuilder {
+        UpdateMessageRequestBodyBuilder::default()
+    }
+}
+
+#[derive(Default)]
+pub struct UpdateMessageRequestBodyBuilder {
+    request: UpdateMessageRequestBody,
+}
+
+impl UpdateMessageRequestBodyBuilder {
+    /// 消息接收者的ID，ID类型应与查询参数receive_id_type 对应；
+    /// 推荐使用 OpenID，获取方式可参考文档如何获取 Open ID？
+    ///
+    /// 示例值："ou_7d8a6e6df7621556ce0d21922b676706ccs"
+    pub fn receive_id(mut self, receive_id: impl ToString) -> Self {
+        self.request.receive_id = receive_id.to_string();
+        self
+    }
+
+    /// 消息类型 包括：text、post、image、file、audio、media、sticker、interactive、share_chat、
+    /// share_user等，类型定义请参考发送消息内容
+    ///
+    /// 示例值："text"
+    pub fn msg_type(mut self, msg_type: impl ToString) -> Self {
+        self.request.msg_type = msg_type.to_string();
+        self
+    }
+
+    /// 消息内容，JSON结构序列化后的字符串。不同msg_type对应不同内容，具体格式说明参考：
+    /// 发送消息内容
+    ///
+    /// 注意：
+    /// JSON字符串需进行转义，如换行符转义后为\\n
+    /// 文本消息请求体最大不能超过150KB
+    /// 卡片及富文本消息请求体最大不能超过30KB
+    /// 示例值："{\"text\":\"test content\"}"
+    pub fn content(mut self, content: impl ToString) -> Self {
+        self.request.content = content.to_string();
+        self
+    }
+
+    /// 由开发者生成的唯一字符串序列，用于发送消息请求去重；
+    /// 持有相同uuid的请求1小时内至多成功发送一条消息
+    ///
+    /// 示例值："选填，每次调用前请更换，如a0d69e20-1dd1-458b-k525-dfeca4015204"
+    ///
+    /// 数据校验规则：
+    ///
+    /// 最大长度：50 字符
+    pub fn uuid(mut self, uuid: impl ToString) -> Self {
+        self.request.uuid = Some(uuid.to_string());
+        self
+    }
+
+    pub fn build(self) -> UpdateMessageRequestBody {
+        self.request
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateMessageResp {
+    pub data: Message,
 }
 
 #[derive(Default)]
