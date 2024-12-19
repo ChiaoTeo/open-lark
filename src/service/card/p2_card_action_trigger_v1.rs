@@ -80,10 +80,9 @@ pub struct Operator {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "tag")]
-#[serde(rename_all = "camelCase")]
 pub enum Action {
     #[serde(rename = "interactive_container")]
-    CallbackAction(CallbackAction),
+    InteractiveContainer(InteractiveContainer),
     #[serde(rename = "button")]
     Button(ButtonAction),
 }
@@ -100,7 +99,7 @@ pub struct ButtonAction {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 
-pub struct CallbackAction {
+pub struct InteractiveContainer {
     pub value: Value,
 }
 
