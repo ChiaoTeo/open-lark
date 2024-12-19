@@ -90,7 +90,6 @@ pub enum Action {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ButtonAction {
-    pub tag: String,
     pub timezone: String,
     #[serde(rename = "form_value")]
     pub form_value: HashMap<String, String>,
