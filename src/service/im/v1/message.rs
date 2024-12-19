@@ -7,7 +7,7 @@ use serde_json::{json, Value};
 
 use crate::core::{
     api_req::ApiRequest,
-    api_resp::{ApiResponseTrait, BaseResponse, ResponseFormat},
+    api_resp::{ApiResponseTrait, BaseResponse, EmptyResponse, ResponseFormat},
     config::Config,
     constants::AccessTokenType,
     http::Transport,
@@ -48,7 +48,7 @@ impl MessageService {
         msg_id: &str,
         create_message_request: UpdateMessageRequest,
         option: Option<RequestOption>,
-    ) -> SDKResult<BaseResponse<()>> {
+    ) -> SDKResult<BaseResponse<EmptyResponse>> {
         let mut api_req = create_message_request.api_req;
         api_req.http_method = Method::PATCH;
         api_req.api_path = format!("/open-apis/im/v1/messages/{}", msg_id);
@@ -132,12 +132,6 @@ impl<'a> ListMessageIterator<'a> {
                 None
             }
         }
-    }
-}
-
-impl ApiResponseTrait for () {
-    fn data_format() -> ResponseFormat {
-        ResponseFormat::Flatten
     }
 }
 
