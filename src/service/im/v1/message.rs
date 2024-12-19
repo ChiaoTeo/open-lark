@@ -135,7 +135,6 @@ impl<'a> ListMessageIterator<'a> {
     }
 }
 
-
 impl ApiResponseTrait for () {
     fn data_format() -> ResponseFormat {
         ResponseFormat::Flatten

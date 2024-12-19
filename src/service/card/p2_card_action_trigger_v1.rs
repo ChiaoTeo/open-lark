@@ -92,7 +92,7 @@ pub enum Action {
 pub struct ButtonAction {
     pub timezone: String,
     #[serde(rename = "form_value")]
-    pub form_value: HashMap<String, String>,
+    pub form_value: Option<HashMap<String, String>>,
     pub name: String,
 }
 
