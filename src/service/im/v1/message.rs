@@ -48,7 +48,7 @@ impl MessageService {
         msg_id: &str,
         create_message_request: UpdateMessageRequest,
         option: Option<RequestOption>,
-    ) -> SDKResult<BaseResponse<Message>> {
+    ) -> SDKResult<BaseResponse<()>> {
         let mut api_req = create_message_request.api_req;
         api_req.http_method = Method::PATCH;
         api_req.api_path = format!("/open-apis/im/v1/messages/{}", msg_id);
