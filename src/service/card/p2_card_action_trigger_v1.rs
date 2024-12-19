@@ -1,10 +1,12 @@
+use std::collections::HashMap;
+
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Value;
 
 use crate::event::dispatcher::EventHandler;
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct P2CardActionTriggerV1 {
     pub schema: String,
@@ -55,7 +57,7 @@ pub struct Header {
     pub app_id: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Event {
     pub operator: Operator,
@@ -76,11 +78,30 @@ pub struct Operator {
     pub union_id: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "tag")]
+#[serde(rename_all = "camelCase")]
+pub enum Action {
+    #[serde(rename = "interactive_container")]
+    CallbackAction(CallbackAction),
+    #[serde(rename = "button")]
+    Button(ButtonAction),
+}
+
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Action {
-    pub value: Value,
+pub struct ButtonAction {
     pub tag: String,
+    pub timezone: String,
+    #[serde(rename = "form_value")]
+    pub form_value: HashMap<String, String>,
+    pub name: String,
+}
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+
+pub struct CallbackAction {
+    pub value: Value,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
