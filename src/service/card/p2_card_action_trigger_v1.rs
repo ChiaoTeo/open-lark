@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use serde::Serialize;
+use serde_json::Value;
 
 use crate::event::dispatcher::EventHandler;
 
@@ -22,7 +23,9 @@ impl<F> P2CardActionTriggerV1ProcessorImpl<F>
 where
     F: Fn(P2CardActionTriggerV1) + 'static,
 {
-    pub fn new(f: F) -> Self { P2CardActionTriggerV1ProcessorImpl { f } }
+    pub fn new(f: F) -> Self {
+        P2CardActionTriggerV1ProcessorImpl { f }
+    }
 }
 
 impl<F> EventHandler for P2CardActionTriggerV1ProcessorImpl<F>
@@ -78,12 +81,6 @@ pub struct Operator {
 pub struct Action {
     pub value: Value,
     pub tag: String,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Value {
-    pub key: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

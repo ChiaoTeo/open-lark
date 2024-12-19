@@ -131,6 +131,7 @@ impl LarkWsClient {
                     trace_id,
                     String::from_utf8(pl.clone()).unwrap()
                 );
+
                 match msg_type {
                     "event" => {
                         let mut resp = NewWsResponse::new(StatusCode::OK);
