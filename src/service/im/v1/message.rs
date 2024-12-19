@@ -135,6 +135,13 @@ impl<'a> ListMessageIterator<'a> {
     }
 }
 
+
+impl ApiResponseTrait for () {
+    fn data_format() -> ResponseFormat {
+        ResponseFormat::Data
+    }
+}
+
 #[derive(Default)]
 pub struct UpdateMessageRequest {
     api_req: ApiRequest,
