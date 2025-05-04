@@ -66,7 +66,7 @@ impl EventDispatcherHandler {
     }
 }
 
-pub trait EventHandler {
+pub trait EventHandler: Send {
     fn handle(&self, payload: &[u8]) -> anyhow::Result<()>;
 }
 
