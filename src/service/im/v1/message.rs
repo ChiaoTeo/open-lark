@@ -100,7 +100,7 @@ pub struct ListMessageIterator<'a> {
     has_more: bool,
 }
 
-impl<'a> ListMessageIterator<'a> {
+impl ListMessageIterator<'_> {
     pub async fn next(&mut self) -> Option<Vec<Message>> {
         if !self.has_more {
             return None;
